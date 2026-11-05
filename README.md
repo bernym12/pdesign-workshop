@@ -109,7 +109,7 @@ Add your site's conda module load above the `source ... conda.sh` line if batch 
 
 ```bash
 conda activate pdesign
-export WORKSHOP=/shared/protein_workshop        # path from your facilitator
+export WORKSHOP=/scratch/bernardm/protein_workshop        # path from your facilitator
 export BOLTZ_CACHE=$WORKSHOP/boltz_cache        # pre-downloaded weights
 cd ~/pdesign-workshop && mkdir -p logs
 ```
