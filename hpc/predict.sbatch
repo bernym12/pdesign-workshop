@@ -18,7 +18,6 @@ OUT=${2:-results}
 # add your site's conda module load here if needed, e.g. module load miniforge
 # source "$(conda info --base)/etc/profile.d/conda.sh"
 module load Miniforge3
-module load cuda/12.2.0
 source activate pdesign
 export BOLTZ_CACHE=${BOLTZ_CACHE:-$HOME/.boltz}
 
