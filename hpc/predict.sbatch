@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=boltz
+#SBATCH --allocation={INSERT_ALLOCATION}
 #SBATCH --partition=a100_normal_q
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
@@ -17,6 +18,7 @@ OUT=${2:-results}
 # add your site's conda module load here if needed, e.g. module load miniforge
 # source "$(conda info --base)/etc/profile.d/conda.sh"
 module load Miniforge3
+module load cuda/12.2.0
 source activate pdesign
 export BOLTZ_CACHE=${BOLTZ_CACHE:-$HOME/.boltz}
 
@@ -24,4 +26,5 @@ boltz predict "$INPUT" \
   --out_dir "$OUT" \
   --output_format pdb \
   --diffusion_samples 1 \
-  --recycling_steps 3
+  --recycling_steps 3 \
+  --use_msa_server
