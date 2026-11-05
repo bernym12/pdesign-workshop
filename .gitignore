@@ -1,0 +1,16 @@
+# generated outputs and logs
+results/
+logs/*
+!logs/.gitkeep
+boltz_results/
+mpnn_out/
+designs/
+rfd_*/
+af3_in/
+af3_results/
+# large or site-specific downloads
+*.pt
+*.ckpt
+.boltz/
+boltz_cache/
+__pycache__/
