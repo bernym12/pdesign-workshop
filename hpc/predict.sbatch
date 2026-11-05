@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=boltz
-#SBATCH --allocation={INSERT_ALLOCATION}
+#SBATCH --account=aipmm
 #SBATCH --partition=a100_normal_q
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4

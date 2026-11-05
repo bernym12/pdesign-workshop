@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=af3
-#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --account={INSERT_ACCOUNT}
+#SBATCH --partition=a100_normal_q
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G

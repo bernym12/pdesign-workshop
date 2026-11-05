@@ -86,14 +86,24 @@ conda activate pdesign
 boltz predict --help | head -n 5
 python -c "import torch, Bio; print('torch', torch.__version__, '| biopython', Bio.__version__)"
 python ~/ProteinMPNN/protein_mpnn_run.py --help | head -n 5
-srun --partition=a100_normal_q --gres=gpu:1 --time=00:05:00 nvidia-smi
+srun --account=YOUR_ACCOUNT --partition=a100_normal_q --gres=gpu:1 --time=00:05:00 nvidia-smi
 ```
 
 All four should run without errors. The last one confirms you can get a GPU; it should print a table with a GPU name.
 
-### Edit the job script once
+### Edit the job scripts once
 
-Open `hpc/predict.sbatch` and set `--partition` to your GPU partition. Add your site's conda module load above the `source ... conda.sh` line if batch jobs do not inherit it.
+Open `hpc/predict.sbatch` (and `hpc/alphafold3.sbatch` if you run AlphaFold 3) and set two lines near the top:
+
+```bash
+#SBATCH --account={INSERT_ACCOUNT}     # your allocation/account name
+#SBATCH --partition=a100_normal_q      # the GPU partition you want to run on
+```
+
+- **Account (allocation):** the allocation your jobs are charged to. Replace the whole `{INSERT_ACCOUNT}` placeholder, braces included, so the line reads for example `--account=my_allocation`. Slurm's option is `--account` (or `-A`); there is no `--allocation` option. List the accounts you belong to with `sacctmgr show assoc user=$USER format=account%30,partition`, or ask your facilitator.
+- **Partition:** `a100_normal_q` is the A100 GPU queue used in this workshop. See what you can use with `sinfo -s`, and pick a partition that has GPUs, since Boltz needs one.
+
+Add your site's conda module load above the `source ... conda.sh` line if batch jobs do not inherit it.
 
 ### Each session
 
@@ -401,6 +411,7 @@ Run these from the repo folder. Step 3 depends on your Boltz version: it may sav
 | --- | --- | --- |
 | `boltz: command not found` in the job log | Env not active inside the batch job | Keep the `conda activate pdesign` lines in `hpc/predict.sbatch` and add your module load |
 | Job fails instantly with no log | `logs/` does not exist | `mkdir -p logs` before `sbatch` |
+| `sbatch: error: Invalid account or account/partition combination` | `{INSERT_ACCOUNT}` still in the script, or the account cannot use that partition | Set `--account` to your real account and check the partition with `sinfo -s` |
 | Download error or hang at job start | No internet on the compute node and weights not cached | Set `BOLTZ_CACHE` to the pre-staged folder |
 | `PermissionError` on the cache | Shared cache is read-only | Copy it to a folder you own and point `BOLTZ_CACHE` there |
 | Error about a protein chain with no MSA | No `msa:` line and no `--use_msa_server` | Set `msa:` to an `.a3m` path or to `empty` |
@@ -426,7 +437,7 @@ Confirm each item in every environment and edit this README to match:
 - [ ] `boltz predict designs` runs every YAML in a folder
 - [ ] ProteinMPNN writes `mpnn_out/seqs/<name>.fa` with `score=` and `seq_recovery=` in the headers (`make_inputs.py` parses these)
 - [ ] Colab: install time and GPU availability
-- [ ] AF3: `sbatch hpc/alphafold3.sbatch af3_in/gb1 results/af3` finishes and writes `*_model.cif` and `ranking_scores.csv`; edit the partition and time in the sbatch file
+- [ ] AF3: `sbatch hpc/alphafold3.sbatch af3_in/gb1 results/af3` finishes and writes `*_model.cif` and `ranking_scores.csv`; set the account and partition in the sbatch file
 - [ ] RFdiffusion: `torch.cuda.is_available()` is True in `SE3nv` on a GPU node, and Exercise 4 writes `denovo_0.pdb` and friends
 - [ ] RFdiffusion binder output (Exercise 5): the `awk` chain count shows which chain is the binder
 - [ ] The MSA file Boltz saves from `--use_msa_server` (name and format) can be referenced from `msa:`

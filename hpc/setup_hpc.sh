@@ -19,4 +19,4 @@ echo "--- smoke test ---"
 boltz predict --help | head -n 5
 python -c "import torch, Bio; print('torch', torch.__version__, '| biopython', Bio.__version__)"
 python "$MPNN_DIR/protein_mpnn_run.py" --help | head -n 5
-echo "OK. Now check GPU access:  srun --partition=YOUR_GPU_PARTITION --gres=gpu:1 --time=00:05:00 nvidia-smi"
+echo "OK. Now check GPU access:  srun --account=YOUR_ACCOUNT --partition=a100_normal_q --gres=gpu:1 --time=00:05:00 nvidia-smi"
